@@ -91,6 +91,9 @@ public class Array2D<E> {
 	}
 
 	public String toString() {
+		if (head == null)
+			return null;
+		
 		String st = "";
 		Array2DNode<E> current = head;
 		Array2DNode<E> tmp = head;
@@ -252,39 +255,157 @@ public class Array2D<E> {
 	}
 
 	public void deleteFirstCol() {
-		// Removes the first column. 
+		if (head.right != null) 
+			head = head.right;
+		else 
+			head = null;
+		
+		
+		cols--;
 	}
 
 	public void deleteFirstRow() {
-		// Removes the first row. 
+		if (head.down != null)
+			head = head.down;
+		else 
+			head = null;
+		
+		rows--;
 	}
 
 	public void deleteLastCol() {
-		// Removes the last column. 
+		Array2DNode<E> current = head;
+		
+		for (int k = 1 ; k < cols - 1 ; k++) 
+			current = current.right;
+			
+		
+		for (int i = 0 ; i < rows ; i++) {	
+			current.right = null;
+			
+			if (i < rows - 1) 
+				current = current.down;		
+		}
+		
+		cols--;
 	}
 
 	public void deleteLastRow() {
-		// Removes the last row. 
+		Array2DNode<E> current = head;
+				
+		for (int k = 1 ; k < rows - 1 ; k++) 
+			current = current.down;
+				
+		for (int i = 0 ; i < cols ; i++) {	
+			current.down = null;
+			
+			if (i < cols - 1) 
+				current = current.right;		
+		}
+		
+		rows--;
 	}
 
 	public void deleteCol(int index) {
-		// Removes the column at the given index. 
+		if (index >= cols || index < 0)
+			throw new IndexOutOfBoundsException("Out of Bounds");	
+		
+		if (index == 0)
+			deleteFirstCol();
+		else if(index == cols - 1)
+			deleteLastCol();
+		else {
+			Array2DNode<E> current = head;
+			Array2DNode<E> nextCol = head;
+			
+			for (int k = 0 ; k < index + 1 ; k++) {
+				if (k < index - 2)
+					current = current.right;
+				
+				nextCol = nextCol.right;
+			}
+				
+			for (int i = 0 ; i < rows ; i++) {
+				current.right = nextCol;
+				
+				if (i < rows - 1) {
+					current = current.down;
+					nextCol = nextCol.down;
+				}		
+			}
+			
+			cols--;
+		}
+			
 	}
 
 	public void deleteRow(int index) {
-		// Removes the row at the given index. get(row, col): Returns the item at the given (row, col).  NOTE: You must return the item stored in the Array2DNode, NOT the Array2DNode itself. 
+		if (index >= rows|| index < 0)
+			throw new IndexOutOfBoundsException("Out of Bounds");	
+		
+		if (index == 0)
+			deleteFirstRow();
+		else if(index == rows- 1)
+			deleteLastRow();
+		else {
+			Array2DNode<E> current = head;
+			Array2DNode<E> nextRow = head;
+			
+			for (int k = 0 ; k < index + 1 ; k++) {
+				if (k < index - 2)
+					current = current.down;
+				
+				nextRow = nextRow.down;
+			}
+				
+			for (int i = 0 ; i < cols ; i++) {
+				current.down = nextRow;
+				
+				if (i < cols - 1) {
+					current = current.right;
+					nextRow = nextRow.right;
+				}		
+			}
+			
+			rows--;
+		}
 	}
 
-	public void getCol(int col) {
-		// Returns the Array2DNode that starts the beginning of the requested column. 
+	public Array2DNode<E> getCol(int col) {
+		if (col >= cols|| col < 0)
+			throw new IndexOutOfBoundsException("Out of Bounds");	
+		
+		Array2DNode<E> current = head;
+		
+		for (int j = 0 ; j < col ; j++)
+			current = current.right;
+		
+		return current;
+		
 	}
 
-	public void getRow(int row) {
-		// Returns the Array2DNode that starts the beginning of the requested row. 
+	public Array2DNode<E> getRow(int row) {
+		if (row >= rows|| row < 0)
+			throw new IndexOutOfBoundsException("Out of Bounds");	
+		
+		Array2DNode<E> current = head;
+		
+		for (int j = 0 ; j < row ; j++)
+			current = current.down;
+		
+		return current;
 	}
 
 	public void set(int row, int col, E item) {
-		// Assigns the given item to the Array2DNode at position (row, col). 
+		Array2DNode<E> current = head;
+		
+		for (int i = 0 ; i < row ; i++) 
+			current = current.down;
+		
+		for (int j = 0 ; j < col ; j++)
+			current = current.right;	
+		
+		current.setItem(item);
 	}
 
 	public int colSize() {
@@ -294,5 +415,25 @@ public class Array2D<E> {
 	public int rowSize() {
 		return rows;
 	}
-
+	
+//	public E[][] to2DArray() {		
+//		E[][] arr = (E[][]) new Object[rows][cols];
+//		
+//		Array2DNode<E> current = head;
+//		Array2DNode<E> tmpR = head;
+//		
+//		for (int i = 0 ; i < rows ; i++) {
+//			current = tmpR;
+//			for (int j = 0 ; j < cols ; j++) {
+//				arr[i][j] = current.getItem();
+//				
+//				if (j < cols -1)
+//					current = current.right;
+//			}
+//			if (i < rows - 1)
+//				tmpR = tmpR.down;
+//		}	
+//				
+//		return arr;
+//	}
 }

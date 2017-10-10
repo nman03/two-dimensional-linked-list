@@ -27,6 +27,17 @@ public class Array2DTester {
 		
 		System.out.println(test.toString());
 		
+		test.deleteFirstCol();
+		test.deleteFirstRow();
+ 		test.deleteLastCol();
+		test.deleteCol(1);
+		test.deleteRow(1);
+		System.out.println(test.getCol(2).getItem());
+		System.out.println(test.getRow(2).getItem());
+		test.set(2, 2, 6);
+			
+		System.out.println(test.toString());
+		
 	}
 
 }
